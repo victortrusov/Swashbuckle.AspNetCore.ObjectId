@@ -11,6 +11,19 @@ namespace Middleware.Swagger
     {
         public static Action<SwaggerGenOptions> Config(bool isProduction) => (options) =>
             {
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+                options.OperationFilter<AuthenticationRequirementsOperationFilter>();
+
+                //This action return true/false after selected SwaggerDoc section for add/decline Request
+                options.DocInclusionPredicate((docName, apiDescription) => docName == apiDescription.GroupName);
+            
                 // files with documentation to add description to properties
                 var swaggerFiles = new string[] { "SwaggerAPI.xml", "SwaggerApplicationAPI.xml" }
                     .Select(fileName => Path.Combine(System.AppContext.BaseDirectory, fileName))
