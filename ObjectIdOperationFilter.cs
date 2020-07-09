@@ -60,7 +60,7 @@ namespace Middleware.Swagger
 
         private string GetFieldDescription(string idName, OperationFilterContext context)
         {
-            var description = $"Идентификатор {idName.Substring(0, idName.Length - 2)} в системе Pooling";
+            var description = $"This is id";
 
             var classProp = context.MethodInfo.GetParameters().FirstOrDefault()?.ParameterType?.GetProperties().FirstOrDefault(x => x.Name == idName);
             var typeAttr = classProp != null
