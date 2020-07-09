@@ -10,7 +10,7 @@ namespace Middleware.Swagger
 {
     public static class SwaggerSetup
     {
-        public static void Config(this SwaggerGenOptions options, bool isProduction)
+        public static void Config(this SwaggerGenOptions options)
         {
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
