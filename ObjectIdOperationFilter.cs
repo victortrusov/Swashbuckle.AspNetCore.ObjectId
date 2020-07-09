@@ -25,7 +25,9 @@ namespace Middleware.Swagger
         private readonly IEnumerable<XPathNavigator> xmlNavigators;
         public ObjectIdOperationFilter(IEnumerable<string> filePaths)
         {
-            xmlNavigators = filePaths.Select(x => new XPathDocument(x).CreateNavigator());
+            xmlNavigators = filePaths != null 
+                ? filePaths.Select(x => new XPathDocument(x).CreateNavigator())
+                : Array.Empty<XPathNavigator>();
         }
 
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
