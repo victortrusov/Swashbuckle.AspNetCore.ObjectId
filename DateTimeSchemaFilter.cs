@@ -19,9 +19,10 @@ namespace Middleware.Swagger
             {
                 if (p.Value.Format == "date-time")
                 {
+                    var name = char.ToUpperInvariant(p.Key[0]) + p.Key.Substring(1);
                     // check if datetime for sure
                     var classProp = context.Type.GetProperties()
-                        .FirstOrDefault(x => x.Name == p.Key);
+                        .FirstOrDefault(x => x.Name == name);
                     var typeAttr = classProp != null
                         ? (DataTypeAttribute)classProp.GetCustomAttribute<DataTypeAttribute>()
                         : null;

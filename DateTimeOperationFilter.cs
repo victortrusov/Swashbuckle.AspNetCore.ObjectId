@@ -20,8 +20,9 @@ namespace Middleware.Swagger
                 {
                     if (p.Schema.Format == "date-time")
                     {
+                        var name = char.ToUpperInvariant(p.Name[0]) + p.Name.Substring(1);
                         var classProp = context.MethodInfo.GetParameters().FirstOrDefault()?.ParameterType?
-                            .GetProperties().FirstOrDefault(x => x.Name == p.Name);
+                            .GetProperties().FirstOrDefault(x => x.Name == name);
                         var typeAttr = classProp != null
                         ? (DataTypeAttribute)classProp.GetCustomAttribute<DataTypeAttribute>()
                         : null;

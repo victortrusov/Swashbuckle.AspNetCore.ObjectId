@@ -25,7 +25,7 @@ namespace Middleware.Swagger
         private readonly IEnumerable<XPathNavigator> xmlNavigators;
         public ObjectIdOperationFilter(IEnumerable<string> filePaths)
         {
-            xmlNavigators = filePaths != null 
+            xmlNavigators = filePaths != null
                 ? filePaths.Select(x => new XPathDocument(x).CreateNavigator())
                 : Array.Empty<XPathNavigator>();
         }
@@ -62,14 +62,13 @@ namespace Middleware.Swagger
 
         private string GetFieldDescription(string idName, OperationFilterContext context)
         {
-            var description = $"This is id";
-
-            var classProp = context.MethodInfo.GetParameters().FirstOrDefault()?.ParameterType?.GetProperties().FirstOrDefault(x => x.Name == idName);
+            var name = char.ToUpperInvariant(idName[0]) + idName.Substring(1);
+            var classProp = context.MethodInfo.GetParameters().FirstOrDefault()?.ParameterType?.GetProperties().FirstOrDefault(x => x.Name == name);
             var typeAttr = classProp != null
                 ? (DescriptionAttribute)classProp.GetCustomAttribute<DescriptionAttribute>()
                 : null;
             if (typeAttr != null)
-                description = typeAttr?.Description;
+                return typeAttr?.Description;
 
             if (classProp != null)
                 foreach (var xmlNavigator in xmlNavigators)
@@ -77,10 +76,10 @@ namespace Middleware.Swagger
                     var propertyMemberName = XmlCommentsNodeNameHelper.GetMemberNameForFieldOrProperty(classProp);
                     var propertySummaryNode = xmlNavigator.SelectSingleNode($"/doc/members/member[@name='{propertyMemberName}']/summary");
                     if (propertySummaryNode != null)
-                        description = XmlCommentsTextHelper.Humanize(propertySummaryNode.InnerXml);
+                        return XmlCommentsTextHelper.Humanize(propertySummaryNode.InnerXml);
                 }
 
-            return description;
+            return null;
         }
     }
 }
